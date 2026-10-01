@@ -285,38 +285,7 @@ function LeadForm( {setModelState}: {setModelState: React.Dispatch<React.SetStat
         phoneNO: "",
       },
     });
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    const { fullName, email, phoneNO } = values;
-    try {
-      setLoading(true);
-      const response = await fetch("/api/send-lead", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ fullName, email, phoneNO }),
-      });
 
-      setLoading(false);
-      if (response.status === 200){
-        updateLead()
-        toast({ description: "Subbmitted successfully!" });
-        setModelState(false)
-        router.push('/portfolio')
-      }
-      else
-        toast({
-          variant: "destructive",
-          description: "Error in sending email",
-        });
-    } catch (error) {
-      setLoading(false);
-      toast({
-        variant: "destructive",
-        description: "Error in sending email",
-      });
-    }
-  }
 
 
   return (
