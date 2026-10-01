@@ -225,28 +225,6 @@ const ListItem = React.forwardRef<
 });
 ListItem.displayName = "ListItem";
 
-function PortfolioBtn() {
-  const [modelState, setModelState] = React.useState<boolean>(false);
-  const { lead } = useLeadStore();
-  const router = useRouter();
-  const handleClick = async () => {
-    if(lead) router.push('/portfolio')
-    else {
-  setModelState(true)
-}
-  };
-  return (
-    <>
-      <Button
-        className="relative inline-flex h-10 overflow-hidden rounded-full p-[1px] focus:outline-none "
-        onClick={handleClick}
-      >
-        <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#000000_0%,#ffa366_50%,#fff0e6_100%)]" />
-        <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-primary px-3 py-1 text-sm font-medium text-white backdrop-blur-3xl ">
-          Our Portfolio
-        </span>
-      </Button>
-
       <Dialog
         open={modelState}
         as="div"
