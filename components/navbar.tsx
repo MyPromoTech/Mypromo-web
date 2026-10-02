@@ -54,30 +54,19 @@ const Services: { title: string; href: string; description: string }[] = [
     description: "Transform Your Brand with Stunning Graphic Design.",
   },
   {
-    title: "Lead Generation",
+    title: "Video Editing",
     href: "/services/leadgen",
     description: " Supercharge Your Sales with Expert Lead Generation.",
   },
   {
-    title: "Marketing Automation",
+    title: "Performance Marketing",
     href: "/services/marketingautomation",
     description:
-      "Streamline Your Marketing with Advanced Automation Solutions.",
+      "Achieve Your Business Goal with Performance Marketing.",
   },
 
   {
-    title: "Content Writing",
-    href: "/services/contentwriting",
-    description: "Elevate Your Brand with Professional Content Writing.",
-  },
-
-  {
-    title: "Collab Membership",
-    href: "/services/collab",
-    description: "Unlock Exclusive Benefits with Our Collab Membership",
-  },
-  {
-    title: "Salesforce CRM",
+    title: "Salesforce",
     href: "/services/salesforce",
     description:
       "We are dedicated to helping businesses like yours unlock the full potential of Salesforce.",
