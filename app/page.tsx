@@ -5,7 +5,6 @@ import { FeaturesSection } from "@/components/layout/sections/features";
 import { HeroSection } from "@/components/layout/sections/hero";
 import { Salutation } from "@/components/layout/sections/salutation";
 import { ServiceSection } from "@/components/layout/sections/service";
-import { TeamSection } from "@/components/layout/sections/team";
 import { TestimonialSection } from "@/components/layout/sections/testimonial";
 import { Marquee } from "@/components/special/marque";
 import Image from "next/image";
