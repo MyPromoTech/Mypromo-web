@@ -139,7 +139,6 @@ export default function Home() {
       </section>
 
       <TestimonialSection />
-      <TeamSection />
       <CommunitySection />
       <ContactSection />
     </main>
