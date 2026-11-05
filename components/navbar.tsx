@@ -54,19 +54,30 @@ const Services: { title: string; href: string; description: string }[] = [
     description: "Transform Your Brand with Stunning Graphic Design.",
   },
   {
-    title: "Video Editing",
+    title: "Lead Generation",
     href: "/services/leadgen",
     description: " Supercharge Your Sales with Expert Lead Generation.",
   },
   {
-    title: "Performance Marketing",
+    title: "Marketing Automation",
     href: "/services/marketingautomation",
     description:
-      "Achieve Your Business Goal with Performance Marketing.",
+      "Streamline Your Marketing with Advanced Automation Solutions.",
   },
 
   {
-    title: "Salesforce",
+    title: "Content Writing",
+    href: "/services/contentwriting",
+    description: "Elevate Your Brand with Professional Content Writing.",
+  },
+
+  {
+    title: "Collab Membership",
+    href: "/services/collab",
+    description: "Unlock Exclusive Benefits with Our Collab Membership",
+  },
+  {
+    title: "Salesforce CRM",
     href: "/services/salesforce",
     description:
       "We are dedicated to helping businesses like yours unlock the full potential of Salesforce.",
@@ -214,6 +225,28 @@ const ListItem = React.forwardRef<
 });
 ListItem.displayName = "ListItem";
 
+function PortfolioBtn() {
+  const [modelState, setModelState] = React.useState<boolean>(false);
+  const { lead } = useLeadStore();
+  const router = useRouter();
+  const handleClick = async () => {
+    if(lead) router.push('/portfolio')
+    else {
+  setModelState(true)
+}
+  };
+  return (
+    <>
+      <Button
+        className="relative inline-flex h-10 overflow-hidden rounded-full p-[1px] focus:outline-none "
+        onClick={handleClick}
+      >
+        <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#000000_0%,#ffa366_50%,#fff0e6_100%)]" />
+        <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-primary px-3 py-1 text-sm font-medium text-white backdrop-blur-3xl ">
+          Our Portfolio
+        </span>
+      </Button>
+
       <Dialog
         open={modelState}
         as="div"
@@ -248,3 +281,150 @@ ListItem.displayName = "ListItem";
     </>
   );
 }
+
+function LeadForm( {setModelState}: {setModelState: React.Dispatch<React.SetStateAction<boolean>>}) {
+  const { updateLead } = useLeadStore();
+  const router = useRouter()
+
+  const phoneRegex = new RegExp(
+    /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/
+  );
+  
+  const formSchema = z.object({
+    fullName: z.string().min(2).max(255),
+    email: z.string().email(),
+    phoneNO: z.string().regex(phoneRegex, "invalid Number").min(10),
+  });
+  const [loading, setLoading] = useState(false);
+  
+    const { toast } = useToast();
+  
+    const form = useForm<z.infer<typeof formSchema>>({
+      resolver: zodResolver(formSchema),
+      defaultValues: {
+        fullName: "",
+        email: "",
+        phoneNO: "",
+      },
+    });
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const { fullName, email, phoneNO } = values;
+    try {
+      setLoading(true);
+      const response = await fetch("/api/send-lead", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ fullName, email, phoneNO }),
+      });
+
+      setLoading(false);
+      if (response.status === 200){
+        updateLead()
+        toast({ description: "Subbmitted successfully!" });
+        setModelState(false)
+        router.push('/portfolio')
+      }
+      else
+        toast({
+          variant: "destructive",
+          description: "Error in sending email",
+        });
+    } catch (error) {
+      setLoading(false);
+      toast({
+        variant: "destructive",
+        description: "Error in sending email",
+      });
+    }
+  }
+
+
+  return (
+    <Card className="bg-transparent">
+      <CardHeader className="text-primary text-2xl"> Enter Details </CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="grid w-full gap-4"
+          >
+            <div className="flex flex-col md:!flex-row gap-8">
+              <FormField
+                control={form.control}
+                name="fullName"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Full Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter Full Name" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="email"
+                        placeholder="Enter your email"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <FormField
+                control={form.control}
+                name="phoneNO"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Phone No</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="tel"
+                        placeholder="Enter Phone No"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            
+
+            {loading ? <SendBtnLoading /> : <SendBtn />}
+          </form>
+        </Form>
+      </CardContent>
+
+    </Card>
+  );
+}
+
+const SendBtn = () => {
+  return <Button className="mt-4">Submit</Button>;
+};
+
+const SendBtnLoading = () => {
+  return (
+    <Button disabled>
+      <Loader2 className="animate-spin" />
+      Please wait
+    </Button>
+  );
+};
